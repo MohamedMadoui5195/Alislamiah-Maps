@@ -3,130 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alislamiah Maps</title>
+    <title>Alislamiah Maps - واجهة ثابتة</title>
     
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body, html { width: 100%; height: 100%; overflow: hidden; }
+        body, html { width: 100%; height: 100%; overflow: hidden; background: #e5e3df; }
 
-        /* حاوية الخريطة الخاصة بجوجل */
-        #map { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
+        /* حاوية ثابتة تماماً تشبه تصميم واجهة الخرائط الكبرى */
+        .static-map-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-image: url('https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=1920&auto=format&fit=crop'); /* خلفية خريطة واقعية وثابتة عالية الدقة */
+            background-size: cover;
+            background-position: center;
+        }
 
-        /* شعار التطبيق (بديل لاسم وشعار جوجل) */
+        /* طبقة تعتيم خفيفة لجعل الواجهة احترافية */
+        .overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        /* شريط البحث العلوي الثابت */
+        .search-container {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            background: #fff;
+            width: 90%;
+            max-width: 450px;
+            height: 50px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            padding: 0 15px;
+        }
+        .search-container input {
+            flex: 1; border: none; outline: none; font-size: 16px; color: #202124; background: transparent; text-align: right;
+        }
+
+        /* شعار التطبيق الثابت */
         .brand-logo {
             position: absolute;
-            top: 15px;
-            left: 20px;
-            z-index: 5;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
             background: #fff;
-            padding: 12px 20px;
+            padding: 10px 18px;
             border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             font-weight: bold;
             color: #1b4d3e;
             font-size: 16px;
         }
 
-        /* شريط البحث المدمج من جوجل */
-        #search-input {
+        /* علامة تثبيت ثابتة في منتصف الشاشة */
+        .center-pin {
             position: absolute;
-            top: 15px;
-            right: 20px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -100%);
             z-index: 5;
-            width: 400px;
-            height: 48px;
-            padding: 0 15px;
-            font-size: 16px;
-            border: none;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-            outline: none;
-            background: #fff;
+            font-size: 35px;
+            color: #d93025;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
     </style>
 </head>
 <body>
 
-    <!-- شعار هويتك -->
-    <div class="brand-logo">Alislamiah Maps</div>
+    <div class="static-map-container">
+        <div class="overlay"></div>
+        
+        <!-- شعار Alislamiah Maps الثابت -->
+        <div class="brand-logo">Alislamiah Maps</div>
 
-    <!-- شريط البحث (مدعوم بخدمة الأماكن من جوجل) -->
-    <input id="search-input" type="text" placeholder="البحث في Alislamiah Maps...">
+        <!-- شريط البحث العلوي الثابت -->
+        <div class="search-container">
+            <input type="text" placeholder="البحث في Alislamiah Maps...">
+        </div>
 
-    <!-- حاوية الخريطة -->
-    <div id="map"></div>
-
-    <!-- استدعاء مكتبة وسكريبت خرائط جوجل الرسمي (يعتمد على خوادمهم بدون أن تمتلك خادم) -->
-    <script>
-        function initMap() {
-            // الإحداثيات الافتراضية المبدئية قبل تحديد موقع المستخدم
-            const defaultLocation = { lat: 21.4225, lng: 39.8262 }; // مكة المكرمة
-
-            // إنشاء الخريطة بنفس خصائص وشكل جوجل ماب
-            const map = new google.maps.Map(document.getElementById("map"), {
-                center: defaultLocation,
-                zoom: 14,
-                disableDefaultUI: false, // إظهار أزرار التحكم الافتراضية لجوجل
-            });
-
-            // 1. طلب موقع المستخدم (GPS) فوراً وتوجيه الخريطة إليه تماماً مثل جوجل
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        const userLocation = {
-                            lat: position.coords.latitude,
-                            lng: position.coords.longitude,
-                        };
-                        map.setCenter(userLocation);
-                        
-                        // وضع علامة لموقع المستخدم الحالي
-                        new google.maps.Marker({
-                            position: userLocation,
-                            map: map,
-                            title: "أنت هنا (Alislamiah Maps)",
-                            icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png" // علامة زرقاء لموقعك
-                        });
-                    },
-                    () => {
-                        console.log("تعذر تحديد الموقع الجغرافي تلقائياً.");
-                    }
-                );
-            }
-
-            // 2. تفعيل شريط البحث الذكي (Places Autocomplete) الخاص بجوجل لجلب جميع الأماكن والتقييمات والبيانات
-            const input = document.getElementById("search-input");
-            const autocomplete = new google.maps.places.Autocomplete(input);
-            autocomplete.bindTo("bounds", map);
-
-            const marker = new google.maps.Marker({
-                map: map,
-                anchorPoint: new google.maps.Point(0, -29),
-            });
-
-            autocomplete.addListener("place_changed", () => {
-                marker.setVisible(false);
-                const place = autocomplete.getPlace();
-
-                if (!place.geometry || !place.geometry.location) {
-                    window.alert("لم يتم العثور على تفاصيل لهذا المكان");
-                    return;
-                }
-
-                if (place.geometry.viewport) {
-                    map.fitBounds(place.geometry.viewport);
-                } else {
-                    map.setCenter(place.geometry.location);
-                    map.setZoom(17);
-                }
-
-                marker.setPosition(place.geometry.location);
-                marker.setVisible(true);
-            });
-        }
-    </script>
-
-    <!-- استدعاء سكريبت جوجل الرسمي (استبدل YOUR_API_KEY بمفتاحك الخاص من منصة مطوري جوجل) -->
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&callback=initMap"></script>
+        <!-- دبوس تحديد الموقع الثابت في المنتصف -->
+        <div class="center-pin">📍</div>
+    </div>
 
 </body>
 </html>
