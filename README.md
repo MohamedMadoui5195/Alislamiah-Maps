@@ -3,141 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alislamiah Maps - الخريطة الذكية</title>
+    <title>Alislamiah Maps - النظام الشامل</title>
     
-    <!-- مكتبة الخرائط Leaflet -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    
-    <!-- محرك البحث العالمي -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
-    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
-
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body, html { width: 100%; height: 100%; overflow: hidden; }
 
-        /* الخريطة تملأ الشاشة في الرئيسية */
-        #map { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1; }
+        #map { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
 
         /* شعار التطبيق */
         .brand-logo {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            z-index: 1000;
-            background: #fff;
-            padding: 12px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            font-weight: bold;
-            color: #1b4d3e;
-            font-size: 16px;
+            position: absolute; top: 20px; left: 20px; z-index: 5;
+            background: #fff; padding: 12px 20px; border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); font-weight: bold; color: #1b4d3e; font-size: 16px;
         }
 
-        /* تخصيص شريط البحث */
-        .leaflet-control-geocoder {
-            border-radius: 8px !important;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
-            border: none !important;
-            margin-top: 20px !important;
-            margin-right: 20px !important;
-            padding: 5px !important;
+        /* شريط بحث جوجل الاحترافي (يدعم العمارات، الشركات، وأدق التفاصيل) */
+        #search-input {
+            position: absolute; top: 20px; right: 20px; z-index: 5;
+            width: 420px; height: 50px; padding: 0 15px; font-size: 16px;
+            border: none; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            outline: none; background: #fff;
         }
-        .leaflet-control-geocoder input {
-            font-size: 16px !important;
-            padding: 8px 12px !important;
-            width: 300px !important;
-            outline: none !important;
+
+        /* نافذة تفاصيل المكان (الصور، أوقات العمل، أرقام الهواتف) تماماً مثل جوجل */
+        #place-details {
+            position: absolute; bottom: 30px; right: 20px; z-index: 5;
+            width: 380px; background: white; padding: 20px; border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3); display: none;
         }
+        #place-details h3 { color: #1b4d3e; margin-bottom: 8px; font-size: 18px; }
+        #place-details p { color: #5f6368; font-size: 14px; margin-bottom: 6px; }
+        #place-details img { width: 100%; height: 160px; object-fit: cover; border-radius: 8px; margin-top: 10px; }
     </style>
 </head>
 <body>
 
     <div class="brand-logo">Alislamiah Maps</div>
+
+    <!-- شريط البحث المتقدم -->
+    <input id="search-input" type="text5" placeholder="ابحث عن عمارة، شركة، مطعم، أو معلم...">
+
+    <!-- حاوية الخريطة -->
     <div id="map"></div>
 
+    <!-- نافذة معلومات المكان الاحترافية -->
+    <div id="place-details">
+        <h3 id="place-name"></h3>
+        <p id="place-address"></p>
+        <p id="place-phone"></p>
+        <p id="place-hours" style="font-weight: bold;"></p>
+        <div id="place-image-container"></div>
+    </div>
+
+    <!-- استدعاء خرائط جوجل وتفعيل مكتبة Places لجلب الصور والهواتف وأوقات العمل -->
     <script>
-        // التحقق مما إذا كان هناك موقع محفوظ مسبقاً في ذاكرة المتصفح (Local Storage)
-        const savedLat = localStorage.getItem('islamiah_lat');
-        const savedLng = localStorage.getItem('islamiah_lng');
-        const savedZoom = localStorage.getItem('islamiah_zoom');
+        function initMap() {
+            // موقع افتراضي (مكة المكرمة)
+            const defaultLocation = { lat: 21.4225, lng: 39.8262 };
 
-        // تحديد الإحداثيات الافتتاحية (إما المحفوظة أو مكة المكرمة كافتتاحية أولى)
-        let initialLat = savedLat ? parseFloat(savedLat) : 21.4225;
-        let initialLng = savedLng ? parseFloat(savedLng) : 39.8262;
-        let initialZoom = savedZoom ? parseInt(savedZoom) : (savedLat ? 15 : 6);
-
-        // 1. تهيئة الخريطة وعرضها فوراً في الرئيسية
-        const map = L.map('map', { zoomControl: false }).setView([initialLat, initialLng], initialZoom);
-
-        L.control.zoom({ position: 'bottomleft' }).addTo(map);
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; Alislamiah Maps'
-        }).addTo(map);
-
-        let currentMarker = null;
-
-        // إذا لم يكن هناك موقع محفوظ مسبقاً، نطلب موقع المستخدم (GPS) فوراً
-        if (!savedLat && navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition((position) => {
-                const lat = position.coords.latitude;
-                const lon = position.coords.longitude;
-                map.setView([lat, lon], 15);
-                
-                if (currentMarker) map.removeLayer(currentMarker);
-                currentMarker = L.marker([lat, lon]).addTo(map)
-                    .bindPopup('<b>موقعك الحالي</b>')
-                    .openPopup();
-                
-                // حفظ الموقع الحالي تلقائياً
-                saveLocationState(lat, lon, 15);
+            const map = new google.maps.Map(document.getElementById("map"), {
+                center: defaultLocation,
+                zoom: 15,
+                disableDefaultUI: false
             });
-        } else if (savedLat && savedLng) {
-            // وضع علامة على آخر موقع محفوظ
-            currentMarker = L.marker([initialLat, initialLng]).addTo(map)
-                .bindPopup('<b>آخر موقع محفوظ</b>')
-                .openPopup();
+
+            // استرجاع الموقع المحفوظ مسبقاً في ذاكرة المتصفح
+            const savedLat = localStorage.getItem('islamiah_lat');
+            const savedLng = localStorage.getItem('islamiah_lng');
+
+            if (savedLat && savedLng) {
+                map.setCenter({ lat: parseFloat(savedLat), lng: parseFloat(savedLng) });
+            } else if (navigator.geolocation) {
+                // طلب الموقع الجغرافي (GPS) فوراً وتحديد مكان المستخدم
+                navigator.geolocation.getCurrentPosition((position) => {
+                    const userPos = { lat: position.coords.latitude, lng: position.coords.longitude };
+                    map.setCenter(userPos);
+                    new google.maps.Marker({ position: userPos, map: map, title: "موقعك الحالي" });
+                    localStorage.setItem('islamiah_lat', userPos.lat);
+                    localStorage.setItem('islamiah_lng', userPos.lng);
+                });
+            }
+
+            // حفظ الموقع عند تحريك الخريطة
+            map.addListener('center_changed', () => {
+                const center = map.getCenter();
+                localStorage.setItem('islamiah_lat', center.lat());
+                localStorage.setItem('islamiah_lng', center.lng());
+            });
+
+            // تفعيل البحث الشامل (للعمارات، الشركات، وكل الأماكن العالمية بدقة جوجل)
+            const input = document.getElementById("search-input");
+            const autocomplete = new google.maps.places.Autocomplete(input);
+            autocomplete.bindTo("bounds", map);
+
+            const marker = new google.maps.Marker({ map: map });
+
+            autocomplete.addListener("place_changed", () => {
+                marker.setVisible(false);
+                const place = autocomplete.getPlace();
+
+                if (!place.geometry || !place.geometry.location) return;
+
+                if (place.geometry.viewport) {
+                    map.fitBounds(place.geometry.viewport);
+                } else {
+                    map.setCenter(place.geometry.location);
+                    map.setZoom(17);
+                }
+
+                marker.setPosition(place.geometry.location);
+                marker.setVisible(true);
+
+                // إظهار تفاصيل المكان الاحترافية (الصور، أوقات العمل، الهواتف) تماماً مثل جوجل
+                const detailsBox = document.getElementById("place-details");
+                detailsBox.style.display = "block";
+
+                document.getElementById("place-name").innerText = place.name || "";
+                document.getElementById("place-address").innerText = place.formatted_address || "";
+                document.getElementById("place-phone").innerText = place.formatted_phone_number ? `📞 ${place.formatted_phone_number}` : "";
+                
+                // حالة العمل (مفتوح / مغلق)
+                if (place.opening_hours) {
+                    const isOpen = place.opening_hours.isOpen();
+                    document.getElementById("place-hours").innerText = isOpen ? "🟢 مفتوح الآن" : "🔴 مغلق حالياً";
+                    document.getElementById("place-hours").style.color = isOpen ? "green" : "red";
+                } else {
+                    document.getElementById("place-hours").innerText = "";
+                }
+
+                // جلب صورة المكان إن وجدت
+                const imgContainer = document.getElementById("place-image-container");
+                imgContainer.innerHTML = "";
+                if (place.photos && place.photos.length > 0) {
+                    const img = document.createElement("img");
+                    img.src = place.photos[0].getUrl({ maxWidth: 400, maxHeight: 200 });
+                    imgContainer.appendChild(img);
+                }
+            });
         }
-
-        // دالة لتخزين الموقع في ذاكرة المتصفح عند تحريك الخريطة أو تغييرها
-        function saveLocationState(lat, lng, zoom) {
-            localStorage.setItem('islamiah_lat', lat);
-            localStorage.setItem('islamiah_lng', lng);
-            localStorage.setItem('islamiah_zoom', zoom);
-        }
-
-        // تحديث الموقع المحفوظ كلما قام المستخدم بتحريك الخريطة أو تغيير العرض
-        map.on('moveend', function() {
-            const center = map.getCenter();
-            const zoom = map.getZoom();
-            saveLocationState(center.lat, center.lng, zoom);
-        });
-
-        // 2. البحث العالمي الشامل
-        const geocoder = L.Control.geocoder({
-            defaultMarkGeocode: false,
-            placeholder: "ابحث عن أي مكان في العالم...",
-            errorMessage: "لم يتم العثور على الموقع.",
-            geocoder: L.Control.Geocoder.nominatim()
-        }).addTo(map);
-
-        geocoder.on('markgeocode', function(e) {
-            const bbox = e.geocode.bbox;
-            const center = e.geocode.center;
-            
-            map.fitBounds(bbox);
-
-            if (currentMarker) map.removeLayer(currentMarker);
-            currentMarker = L.marker([center.lat, center.lng]).addTo(map)
-                .bindPopup(`<b>${e.geocode.name}</b>`)
-                .openPopup();
-
-            // حفظ موقع المكان الذي تم البحث عنه والوصول إليه
-            saveLocationState(center.lat, center.lng, map.getZoom());
-        });
     </script>
+    
+    <!-- ضع مفتاح API الخاص بجوجل هنا لتشغيل الصور والأماكن والعمارات بدقة مطلقة -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&callback=initMap"></script>
+
 </body>
 </html>
