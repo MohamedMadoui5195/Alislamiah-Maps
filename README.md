@@ -22,115 +22,159 @@
 
     html,
     body {
+      width: 100%;
+      height: 100%;
       margin: 0;
       padding: 0;
-      width: 100%;
-      height: 100%;
       overflow: hidden;
-      font-family: Arial, Tahoma, sans-serif;
-      background: #061426;
-      color: white;
+      font-family: Arial, "Tajawal", sans-serif;
+      background: #06101f;
     }
+
+    body {
+      position: relative;
+    }
+
+    /* =========================
+       الخريطة
+    ========================= */
 
     #map {
-      position: fixed;
+      position: absolute;
       inset: 0;
-      width: 100%;
-      height: 100%;
       z-index: 1;
-      background: #09182b;
+      background: #101820;
     }
 
-    /* طبقة علوية */
+    .leaflet-control-attribution {
+      font-size: 9px !important;
+      background: rgba(5, 13, 25, 0.78) !important;
+      color: #b8c7d9 !important;
+    }
+
+    .leaflet-control-attribution a {
+      color: #80bfff !important;
+    }
+
+    /* =========================
+       الرأس
+    ========================= */
+
     .top-area {
-      position: fixed;
+      position: absolute;
       top: 0;
       right: 0;
       left: 0;
       z-index: 1000;
-      padding: 15px;
+      padding: 12px;
       pointer-events: none;
     }
 
     .top-bar {
+      width: 100%;
+      max-width: 720px;
+      margin: auto;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 9px;
       pointer-events: auto;
     }
 
-    .menu-btn {
-      width: 48px;
-      height: 48px;
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 16px;
-      background: rgba(5, 20, 38, .94);
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 23px;
-      box-shadow: 0 8px 25px rgba(0,0,0,.35);
-      cursor: pointer;
+    .brand {
+      width: 51px;
+      height: 51px;
       flex-shrink: 0;
+      border-radius: 16px;
+      padding: 6px;
+      background: rgba(5, 17, 34, 0.94);
+      border: 1px solid rgba(77, 153, 255, 0.32);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 11px;
     }
 
     .search-box {
-      height: 52px;
       flex: 1;
+      min-width: 0;
+      height: 51px;
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 0 15px;
-      background: rgba(5, 20, 38, .96);
-      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(5, 17, 34, 0.95);
+      border: 1px solid rgba(77, 153, 255, 0.35);
       border-radius: 17px;
-      box-shadow: 0 8px 30px rgba(0,0,0,.4);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
     }
 
     .search-icon {
-      font-size: 19px;
-      opacity: .85;
+      width: 48px;
+      height: 100%;
+      border: 0;
+      background: transparent;
+      color: #8fb8e8;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
     }
 
     #searchInput {
-      width: 100%;
+      flex: 1;
+      min-width: 0;
       height: 100%;
       border: 0;
-      outline: 0;
+      outline: none;
       background: transparent;
       color: white;
       font-size: 15px;
       text-align: right;
+      padding: 0 5px;
     }
 
     #searchInput::placeholder {
-      color: #91a4bb;
+      color: #8c9db3;
     }
 
     .clear-btn {
-      display: none;
+      width: 40px;
+      height: 100%;
       border: 0;
       background: transparent;
-      color: #9fb0c5;
-      font-size: 18px;
+      color: #91a3b8;
+      font-size: 20px;
+      display: none;
       cursor: pointer;
     }
 
-    /* نتائج البحث */
-    .search-results {
+    /* =========================
+       لوحة البحث
+    ========================= */
+
+    #searchResults {
       position: absolute;
-      top: 78px;
-      right: 73px;
-      left: 15px;
-      max-height: 55vh;
+      top: 75px;
+      right: 12px;
+      left: 12px;
+      max-width: 720px;
+      margin: auto;
+      max-height: 48vh;
       overflow-y: auto;
+      background: rgba(5, 16, 31, 0.97);
+      border: 1px solid rgba(77, 153, 255, 0.25);
+      border-radius: 18px;
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.5);
       display: none;
-      background: rgba(5, 20, 38, .98);
-      border: 1px solid rgba(255,255,255,.1);
-      border-radius: 17px;
-      box-shadow: 0 15px 40px rgba(0,0,0,.5);
       pointer-events: auto;
+      scrollbar-width: thin;
     }
 
     .result-item {
@@ -138,8 +182,9 @@
       align-items: center;
       gap: 12px;
       padding: 14px;
-      border-bottom: 1px solid rgba(255,255,255,.07);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
       cursor: pointer;
+      color: white;
     }
 
     .result-item:last-child {
@@ -147,299 +192,332 @@
     }
 
     .result-item:active {
-      background: rgba(255,255,255,.06);
+      background: rgba(55, 125, 220, 0.14);
     }
 
     .result-icon {
-      width: 39px;
-      height: 39px;
-      border-radius: 12px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #0b2f5c;
-      color: #61a8ff;
-      font-size: 18px;
+      width: 43px;
+      height: 43px;
       flex-shrink: 0;
+      border-radius: 13px;
+      background: #0c2b52;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
     }
 
-    .result-content {
+    .result-text {
       min-width: 0;
       flex: 1;
     }
 
-    .result-title {
-      font-size: 14px;
+    .result-name {
       font-weight: bold;
+      font-size: 14px;
       margin-bottom: 5px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      color: #fff;
     }
 
     .result-address {
-      font-size: 11px;
-      color: #8ea2ba;
-      white-space: nowrap;
+      color: #9fb0c5;
+      font-size: 12px;
+      line-height: 1.5;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    /* أزرار الخريطة */
-    .map-controls {
-      position: fixed;
-      left: 15px;
-      bottom: 100px;
+    /* =========================
+       أزرار الخريطة
+    ========================= */
+
+    .map-tools {
+      position: absolute;
       z-index: 900;
+      left: 13px;
+      bottom: 110px;
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
 
-    .control-btn {
-      width: 48px;
-      height: 48px;
+    .tool-btn {
+      width: 49px;
+      height: 49px;
+      border: 1px solid rgba(78, 153, 255, 0.28);
       border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(5,20,38,.95);
+      background: rgba(5, 17, 34, 0.94);
       color: white;
-      font-size: 20px;
+      box-shadow: 0 7px 24px rgba(0, 0, 0, 0.35);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 8px 25px rgba(0,0,0,.35);
+      font-size: 20px;
       cursor: pointer;
     }
 
-    .control-btn.active {
-      background: #0b4e9b;
+    .tool-btn:active {
+      background: #0d3768;
     }
 
-    /* بطاقة الموقع */
-    .location-card {
-      position: fixed;
-      left: 15px;
-      right: 15px;
-      bottom: 78px;
-      z-index: 950;
+    /* =========================
+       لوحة الاتجاهات
+    ========================= */
+
+    #directionsPanel {
+      position: absolute;
+      z-index: 1100;
+      right: 12px;
+      left: 12px;
+      bottom: 15px;
+      max-width: 720px;
+      margin: auto;
+      background: rgba(5, 16, 31, 0.97);
+      border: 1px solid rgba(75, 153, 255, 0.28);
+      border-radius: 21px;
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.55);
+      padding: 15px;
       display: none;
-      background: rgba(5,20,38,.98);
-      border: 1px solid rgba(255,255,255,.1);
-      border-radius: 22px;
-      padding: 16px;
-      box-shadow: 0 15px 45px rgba(0,0,0,.55);
+      color: white;
     }
 
-    .location-header {
+    .direction-header {
       display: flex;
       align-items: center;
-      gap: 12px;
+      justify-content: space-between;
+      margin-bottom: 12px;
     }
 
-    .place-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 15px;
-      background: #0b3d77;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      flex-shrink: 0;
-    }
-
-    .place-info {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .place-name {
-      font-size: 16px;
+    .direction-title {
       font-weight: bold;
-      margin-bottom: 5px;
+      font-size: 16px;
     }
 
-    .place-address {
-      font-size: 12px;
-      color: #9aacc1;
-      line-height: 1.5;
-    }
-
-    .close-card {
-      width: 35px;
-      height: 35px;
+    .close-direction {
+      width: 34px;
+      height: 34px;
       border: 0;
       border-radius: 11px;
-      background: rgba(255,255,255,.07);
+      background: rgba(255, 255, 255, 0.07);
       color: white;
       cursor: pointer;
-      font-size: 17px;
+      font-size: 18px;
     }
 
-    .card-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 9px;
-      margin-top: 15px;
+    .route-inputs {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 11px;
     }
 
-    .action-btn {
+    .route-input {
       height: 43px;
+      border-radius: 12px;
+      border: 1px solid rgba(100, 160, 230, 0.2);
+      background: #091d36;
+      color: white;
+      outline: none;
+      padding: 0 12px;
+      font-size: 13px;
+      width: 100%;
+    }
+
+    .route-input::placeholder {
+      color: #8193a9;
+    }
+
+    .route-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .route-btn {
+      flex: 1;
+      height: 44px;
       border: 0;
       border-radius: 13px;
-      color: white;
-      background: #0b315d;
       cursor: pointer;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: bold;
     }
 
-    .action-btn.primary {
-      background: #0b63ce;
+    .route-main {
+      background: #1264c4;
+      color: white;
     }
 
-    /* الشريط السفلي */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      right: 0;
-      left: 0;
-      height: 68px;
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      padding: 5px 8px calc(5px + env(safe-area-inset-bottom));
-      background: rgba(4,16,31,.97);
-      border-top: 1px solid rgba(255,255,255,.08);
-      box-shadow: 0 -10px 30px rgba(0,0,0,.3);
+    .route-secondary {
+      background: #102a49;
+      color: #bcd7f5;
     }
 
-    .nav-item {
-      width: 25%;
-      height: 58px;
-      border: 0;
-      background: transparent;
-      color: #8296ad;
+    #routeInfo {
+      display: none;
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 13px;
+      background: #091c34;
+    }
+
+    .route-stats {
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 4px;
-      cursor: pointer;
+      gap: 10px;
+    }
+
+    .route-stat {
+      flex: 1;
+      text-align: center;
+    }
+
+    .route-stat strong {
+      display: block;
+      font-size: 16px;
+      color: white;
+    }
+
+    .route-stat span {
+      display: block;
+      margin-top: 4px;
+      color: #849ab4;
       font-size: 11px;
     }
 
-    .nav-icon {
-      font-size: 20px;
-    }
+    /* =========================
+       بطاقة الموقع
+    ========================= */
 
-    .nav-item.active {
-      color: #5aa9ff;
-    }
-
-    /* شعار */
-    .brand {
-      position: fixed;
-      top: 78px;
-      right: 15px;
+    .location-card {
+      position: absolute;
       z-index: 800;
-      background: rgba(5,20,38,.9);
-      border: 1px solid rgba(255,255,255,.1);
-      padding: 8px 11px;
-      border-radius: 13px;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      box-shadow: 0 7px 20px rgba(0,0,0,.3);
-    }
-
-    .brand img {
-      width: 25px;
-      height: 25px;
-      object-fit: contain;
-      border-radius: 7px;
-    }
-
-    .brand span {
-      font-weight: bold;
-      font-size: 12px;
-    }
-
-    /* رسالة الحالة */
-    .status {
-      position: fixed;
-      top: 145px;
-      right: 50%;
-      transform: translateX(50%);
-      z-index: 1200;
-      padding: 10px 15px;
-      border-radius: 13px;
-      background: rgba(5,20,38,.97);
-      color: #dce9f7;
-      font-size: 12px;
-      display: none;
-      box-shadow: 0 10px 30px rgba(0,0,0,.35);
-    }
-
-    /* تحسين Leaflet */
-    .leaflet-control-zoom {
+      right: 13px;
+      bottom: 17px;
+      max-width: 330px;
+      padding: 12px 14px;
+      background: rgba(5, 17, 34, 0.94);
+      border: 1px solid rgba(77, 153, 255, 0.25);
+      border-radius: 15px;
+      color: white;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4);
       display: none;
     }
 
-    .leaflet-control-attribution {
-      background: rgba(4,16,31,.7) !important;
-      color: #8497ad !important;
-      font-size: 8px !important;
-    }
-
-    .leaflet-control-attribution a {
-      color: #9ab8d7 !important;
-    }
-
-    /* علامة المستخدم */
-    .user-marker {
-      width: 20px;
-      height: 20px;
-      background: #1683ff;
-      border: 4px solid white;
-      border-radius: 50%;
-      box-shadow:
-        0 0 0 7px rgba(22,131,255,.22),
-        0 3px 12px rgba(0,0,0,.45);
-    }
-
-    /* الوضع الفارغ للبحث */
-    .no-results {
-      padding: 22px;
-      text-align: center;
-      color: #899db5;
+    .location-card strong {
       font-size: 13px;
     }
 
-    @media (min-width: 700px) {
+    .location-card div {
+      margin-top: 4px;
+      color: #91a6bf;
+      font-size: 11px;
+    }
+
+    /* =========================
+       Marker
+    ========================= */
+
+    .user-marker {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #198cff;
+      border: 4px solid white;
+      box-shadow:
+        0 0 0 6px rgba(25, 140, 255, 0.18),
+        0 3px 12px rgba(0, 0, 0, 0.45);
+    }
+
+    /* =========================
+       تحميل
+    ========================= */
+
+    #loading {
+      position: fixed;
+      inset: 0;
+      z-index: 3000;
+      background: #050f1d;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
+    #loading img {
+      width: 76px;
+      height: 76px;
+      object-fit: contain;
+      border-radius: 20px;
+      margin-bottom: 18px;
+    }
+
+    #loading strong {
+      font-size: 18px;
+    }
+
+    #loading span {
+      margin-top: 8px;
+      color: #7e93ad;
+      font-size: 12px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* =========================
+       رسالة صغيرة
+    ========================= */
+
+    #toast {
+      position: fixed;
+      z-index: 4000;
+      left: 50%;
+      bottom: 25px;
+      transform: translateX(-50%);
+      background: rgba(5, 17, 34, 0.96);
+      color: white;
+      border: 1px solid rgba(78, 153, 255, 0.3);
+      border-radius: 13px;
+      padding: 11px 16px;
+      font-size: 12px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.4);
+      display: none;
+      white-space: nowrap;
+    }
+
+    /* =========================
+       سطح المكتب
+    ========================= */
+
+    @media (min-width: 800px) {
       .top-area {
-        max-width: 850px;
-        margin: auto;
+        padding: 18px;
       }
 
-      .search-results {
-        right: calc(50% - 352px);
-        left: calc(50% - 425px);
+      .brand {
+        width: 56px;
+        height: 56px;
       }
 
-      .location-card {
-        max-width: 500px;
-        left: 25px;
-        right: auto;
+      .search-box {
+        height: 56px;
       }
 
-      .bottom-nav {
-        max-width: 600px;
-        left: 50%;
-        right: auto;
-        transform: translateX(-50%);
-        border-radius: 20px 20px 0 0;
+      #searchResults {
+        top: 88px;
+      }
+
+      .map-tools {
+        bottom: 35px;
+      }
+
+      #directionsPanel {
+        right: 20px;
+        left: auto;
+        width: 380px;
+        bottom: 25px;
+        margin: 0;
       }
     }
   </style>
@@ -447,719 +525,1477 @@
 
 <body>
 
+  <!-- شاشة التحميل -->
+  <div id="loading">
+    <img src="icon.png" alt="Alislamiah">
+    <strong>Alislamiah Maps</strong>
+    <span>جارٍ تحميل الخريطة...</span>
+  </div>
+
   <!-- الخريطة -->
   <div id="map"></div>
 
-  <!-- المنطقة العلوية -->
+  <!-- الرأس -->
   <div class="top-area">
 
     <div class="top-bar">
 
-      <button class="menu-btn" id="menuBtn" aria-label="القائمة">
-        ☰
-      </button>
+      <div class="brand">
+        <img src="icon.png" alt="Alislamiah Maps">
+      </div>
 
       <div class="search-box">
 
-        <span class="search-icon">⌕</span>
+        <button class="search-icon" id="searchButton" aria-label="بحث">
+          🔍
+        </button>
 
         <input
           id="searchInput"
           type="search"
-          placeholder="ابحث عن مكان أو عنوان..."
+          placeholder="ابحث عن مكان أو شارع أو حي..."
           autocomplete="off"
         >
 
-        <button class="clear-btn" id="clearBtn">×</button>
+        <button
+          class="clear-btn"
+          id="clearButton"
+          aria-label="مسح"
+        >
+          ×
+        </button>
 
       </div>
 
     </div>
 
-    <div class="search-results" id="searchResults"></div>
+    <!-- نتائج البحث -->
+    <div id="searchResults"></div>
 
-  </div>
-
-  <!-- شعار Alislamiah -->
-  <div class="brand">
-    <img src="icon.png" alt="Alislamiah">
-    <span>Alislamiah Maps</span>
   </div>
 
   <!-- أدوات الخريطة -->
-  <div class="map-controls">
+  <div class="map-tools">
 
-    <button class="control-btn" id="locationBtn" title="موقعي">
-      ◎
+    <button
+      class="tool-btn"
+      id="myLocation"
+      title="موقعي"
+      aria-label="موقعي"
+    >
+      📍
     </button>
 
-    <button class="control-btn" id="zoomIn" title="تكبير">
-      +
+    <button
+      class="tool-btn"
+      id="zoomIn"
+      title="تكبير"
+      aria-label="تكبير"
+    >
+      ＋
     </button>
 
-    <button class="control-btn" id="zoomOut" title="تصغير">
+    <button
+      class="tool-btn"
+      id="zoomOut"
+      title="تصغير"
+      aria-label="تصغير"
+    >
       −
     </button>
 
+    <button
+      class="tool-btn"
+      id="routeButton"
+      title="المسار"
+      aria-label="المسار"
+    >
+      🧭
+    </button>
+
   </div>
 
-  <!-- بطاقة المكان -->
+  <!-- معلومات الموقع -->
   <div class="location-card" id="locationCard">
+    <strong>موقعك الحالي</strong>
+    <div id="locationCoordinates"></div>
+  </div>
 
-    <div class="location-header">
+  <!-- لوحة الاتجاهات -->
+  <div id="directionsPanel">
 
-      <div class="place-icon" id="placeIcon">
-        📍
-      </div>
+    <div class="direction-header">
+      <div class="direction-title">🧭 الاتجاهات</div>
 
-      <div class="place-info">
-
-        <div class="place-name" id="placeName">
-          الموقع
-        </div>
-
-        <div class="place-address" id="placeAddress">
-          اختر مكانًا من الخريطة
-        </div>
-
-      </div>
-
-      <button class="close-card" id="closeCard">
+      <button
+        class="close-direction"
+        id="closeDirection"
+        aria-label="إغلاق"
+      >
         ×
       </button>
+    </div>
+
+    <div class="route-inputs">
+
+      <input
+        id="startInput"
+        class="route-input"
+        type="text"
+        placeholder="نقطة الانطلاق"
+      >
+
+      <input
+        id="destinationInput"
+        class="route-input"
+        type="text"
+        placeholder="الوجهة"
+      >
 
     </div>
 
-    <div class="card-actions">
+    <div class="route-actions">
 
-      <button class="action-btn primary" id="directionsBtn">
-        🧭 الاتجاهات
+      <button
+        class="route-btn route-secondary"
+        id="useMyLocation"
+      >
+        📍 موقعي
       </button>
 
-      <button class="action-btn" id="shareBtn">
-        ↗ مشاركة
+      <button
+        class="route-btn route-main"
+        id="calculateRoute"
+      >
+        عرض المسار
       </button>
+
+    </div>
+
+    <div id="routeInfo">
+
+      <div class="route-stats">
+
+        <div class="route-stat">
+          <strong id="routeDistance">—</strong>
+          <span>المسافة</span>
+        </div>
+
+        <div class="route-stat">
+          <strong id="routeDuration">—</strong>
+          <span>الوقت التقريبي</span>
+        </div>
+
+      </div>
 
     </div>
 
   </div>
 
-  <!-- رسالة الحالة -->
-  <div class="status" id="status"></div>
-
-  <!-- شريط التنقل -->
-  <nav class="bottom-nav">
-
-    <button class="nav-item active" id="homeNav">
-      <span class="nav-icon">⌂</span>
-      <span>الخريطة</span>
-    </button>
-
-    <button class="nav-item" id="exploreNav">
-      <span class="nav-icon">✦</span>
-      <span>استكشاف</span>
-    </button>
-
-    <button class="nav-item" id="savedNav">
-      <span class="nav-icon">♡</span>
-      <span>المحفوظات</span>
-    </button>
-
-    <button class="nav-item" id="settingsNav">
-      <span class="nav-icon">⚙</span>
-      <span>الإعدادات</span>
-    </button>
-
-  </nav>
+  <div id="toast"></div>
 
   <!-- Leaflet -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script>
-
-    /* =========================
-       إعداد الخريطة
-    ========================= */
+    /*
+      ==========================================
+      Alislamiah Maps
+      OpenStreetMap + Leaflet + Nominatim + OSRM
+      ==========================================
+    */
 
     const map = L.map("map", {
       zoomControl: false,
       attributionControl: true,
-      minZoom: 2,
-      maxZoom: 19
-    }).setView([36.7538, 3.0588], 12);
+      preferCanvas: true
+    });
 
+    /*
+      طبقة الخريطة
+    */
     L.tileLayer(
       "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
       {
-        maxZoom: 19,
-        attribution: '&copy; OpenStreetMap contributors'
+        maxZoom: 20,
+        minZoom: 2,
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'
       }
     ).addTo(map);
 
 
-    /* =========================
-       العناصر
-    ========================= */
+    /*
+      الموقع الافتراضي:
+      الجزائر العاصمة
+    */
+    const defaultLocation = [36.7538, 3.0588];
 
-    const searchInput = document.getElementById("searchInput");
-    const clearBtn = document.getElementById("clearBtn");
-    const searchResults = document.getElementById("searchResults");
+    map.setView(defaultLocation, 13);
 
-    const locationBtn = document.getElementById("locationBtn");
 
-    const locationCard = document.getElementById("locationCard");
-    const closeCard = document.getElementById("closeCard");
-
-    const placeName = document.getElementById("placeName");
-    const placeAddress = document.getElementById("placeAddress");
-
-    const directionsBtn = document.getElementById("directionsBtn");
-    const shareBtn = document.getElementById("shareBtn");
-
-    const statusBox = document.getElementById("status");
-
+    /*
+      المتغيرات
+    */
     let userMarker = null;
-    let selectedLat = null;
-    let selectedLon = null;
+    let userCircle = null;
 
+    let searchMarker = null;
 
-    /* =========================
-       أدوات مساعدة
-    ========================= */
+    let routeLayer = null;
 
-    function showStatus(message, duration = 2500) {
-
-      statusBox.textContent = message;
-      statusBox.style.display = "block";
-
-      clearTimeout(window.statusTimer);
-
-      window.statusTimer = setTimeout(() => {
-        statusBox.style.display = "none";
-      }, duration);
-    }
-
-
-    function escapeHTML(text) {
-
-      return String(text || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-    }
-
-
-    /* =========================
-       زر التكبير والتصغير
-    ========================= */
-
-    document.getElementById("zoomIn").onclick = () => {
-      map.zoomIn();
-    };
-
-    document.getElementById("zoomOut").onclick = () => {
-      map.zoomOut();
-    };
-
-
-    /* =========================
-       البحث في OpenStreetMap
-    ========================= */
+    let currentUserLocation = null;
 
     let searchTimer = null;
 
+
+    /*
+      إزالة شاشة التحميل
+    */
+    setTimeout(() => {
+      document.getElementById("loading").classList.add("hidden");
+    }, 900);
+
+
+    /*
+      عناصر الواجهة
+    */
+    const searchInput =
+      document.getElementById("searchInput");
+
+    const searchResults =
+      document.getElementById("searchResults");
+
+    const clearButton =
+      document.getElementById("clearButton");
+
+    const searchButton =
+      document.getElementById("searchButton");
+
+    const directionsPanel =
+      document.getElementById("directionsPanel");
+
+    const startInput =
+      document.getElementById("startInput");
+
+    const destinationInput =
+      document.getElementById("destinationInput");
+
+
+    /*
+      Toast
+    */
+    function showToast(message) {
+
+      const toast =
+        document.getElementById("toast");
+
+      toast.textContent = message;
+      toast.style.display = "block";
+
+      clearTimeout(window.toastTimer);
+
+      window.toastTimer = setTimeout(() => {
+        toast.style.display = "none";
+      }, 3000);
+    }
+
+
+    /*
+      زر التكبير
+    */
+    document.getElementById("zoomIn")
+      .addEventListener("click", () => {
+        map.zoomIn();
+      });
+
+
+    /*
+      زر التصغير
+    */
+    document.getElementById("zoomOut")
+      .addEventListener("click", () => {
+        map.zoomOut();
+      });
+
+
+    /*
+      البحث
+    */
     searchInput.addEventListener("input", () => {
 
-      const query = searchInput.value.trim();
+      const value =
+        searchInput.value.trim();
 
-      clearBtn.style.display = query ? "block" : "none";
+      clearButton.style.display =
+        value ? "block" : "none";
 
       clearTimeout(searchTimer);
 
-      if (!query) {
+      if (!value) {
         searchResults.style.display = "none";
         searchResults.innerHTML = "";
         return;
       }
 
+      /*
+        انتظار بسيط حتى لا نرسل طلباً
+        مع كل حرف يكتبه المستخدم.
+      */
       searchTimer = setTimeout(() => {
-        searchPlaces(query);
-      }, 600);
+        searchPlaces(value);
+      }, 500);
 
     });
 
 
+    /*
+      Enter
+    */
+    searchInput.addEventListener("keydown", (event) => {
+
+      if (event.key === "Enter") {
+
+        event.preventDefault();
+
+        const value =
+          searchInput.value.trim();
+
+        if (value) {
+          searchPlaces(value);
+        }
+
+      }
+
+    });
+
+
+    /*
+      زر البحث
+    */
+    searchButton.addEventListener("click", () => {
+
+      const value =
+        searchInput.value.trim();
+
+      if (value) {
+        searchPlaces(value);
+      }
+
+    });
+
+
+    /*
+      مسح البحث
+    */
+    clearButton.addEventListener("click", () => {
+
+      searchInput.value = "";
+
+      clearButton.style.display = "none";
+
+      searchResults.innerHTML = "";
+
+      searchResults.style.display = "none";
+
+      if (searchMarker) {
+        map.removeLayer(searchMarker);
+        searchMarker = null;
+      }
+
+    });
+
+
+    /*
+      Nominatim
+    */
     async function searchPlaces(query) {
 
       searchResults.style.display = "block";
 
-      searchResults.innerHTML =
-        '<div class="no-results">جاري البحث...</div>';
+      searchResults.innerHTML = `
+        <div style="
+          padding:20px;
+          text-align:center;
+          color:#91a6bf;
+          font-size:13px;
+        ">
+          🔎 جارٍ البحث...
+        </div>
+      `;
 
       try {
 
         const url =
           "https://nominatim.openstreetmap.org/search" +
           "?format=jsonv2" +
-          "&q=" + encodeURIComponent(query) +
+          "&addressdetails=1" +
           "&limit=8" +
-          "&accept-language=ar";
+          "&accept-language=ar" +
+          "&q=" +
+          encodeURIComponent(query);
 
-        const response = await fetch(url, {
-          headers: {
-            "Accept": "application/json"
-          }
-        });
-
-        if (!response.ok) {
-          throw new Error("Search failed");
-        }
-
-        const data = await response.json();
-
-        if (!data.length) {
-
-          searchResults.innerHTML =
-            '<div class="no-results">لم يتم العثور على نتائج</div>';
-
-          return;
-        }
-
-        searchResults.innerHTML = "";
-
-        data.forEach(place => {
-
-          const item = document.createElement("div");
-
-          item.className = "result-item";
-
-          item.innerHTML = `
-            <div class="result-icon">📍</div>
-
-            <div class="result-content">
-
-              <div class="result-title">
-                ${escapeHTML(
-                  place.name ||
-                  place.display_name.split(",")[0]
-                )}
-              </div>
-
-              <div class="result-address">
-                ${escapeHTML(place.display_name)}
-              </div>
-
-            </div>
-          `;
-
-          item.addEventListener("click", () => {
-
-            const lat = parseFloat(place.lat);
-            const lon = parseFloat(place.lon);
-
-            map.setView([lat, lon], 16);
-
-            selectedLat = lat;
-            selectedLon = lon;
-
-            showPlace(
-              place.name || "المكان",
-              place.display_name
-            );
-
-            searchResults.style.display = "none";
-
+        const response =
+          await fetch(url, {
+            headers: {
+              "Accept": "application/json"
+            }
           });
 
-          searchResults.appendChild(item);
+        if (!response.ok) {
+          throw new Error("Search error");
+        }
 
-        });
+        const data =
+          await response.json();
+
+        renderSearchResults(data);
 
       } catch (error) {
 
-        searchResults.innerHTML =
-          '<div class="no-results">تعذر إجراء البحث. تحقق من اتصال الإنترنت.</div>';
+        searchResults.innerHTML = `
+          <div style="
+            padding:20px;
+            text-align:center;
+            color:#ff9b9b;
+            font-size:13px;
+          ">
+            تعذر إجراء البحث حالياً.
+          </div>
+        `;
 
       }
 
     }
 
 
-    /* =========================
-       تنظيف البحث
-    ========================= */
+    /*
+      عرض نتائج البحث
+    */
+    function renderSearchResults(results) {
 
-    clearBtn.onclick = () => {
+      if (!results.length) {
 
-      searchInput.value = "";
-
-      clearBtn.style.display = "none";
-
-      searchResults.style.display = "none";
-
-      searchResults.innerHTML = "";
-
-      searchInput.focus();
-
-    };
-
-
-    /* =========================
-       الضغط على الخريطة
-    ========================= */
-
-    map.on("click", async function(e) {
-
-      const lat = e.latlng.lat;
-      const lon = e.latlng.lng;
-
-      selectedLat = lat;
-      selectedLon = lon;
-
-      showPlace(
-        "جارٍ تحديد المكان...",
-        "..."
-      );
-
-      try {
-
-        const url =
-          "https://nominatim.openstreetmap.org/reverse" +
-          "?format=jsonv2" +
-          "&lat=" + lat +
-          "&lon=" + lon +
-          "&accept-language=ar";
-
-        const response = await fetch(url);
-
-        const data = await response.json();
-
-        showPlace(
-          data.name ||
-          "موقع على الخريطة",
-          data.display_name ||
-          `${lat.toFixed(5)}, ${lon.toFixed(5)}`
-        );
-
-      } catch {
-
-        showPlace(
-          "موقع على الخريطة",
-          `${lat.toFixed(5)}, ${lon.toFixed(5)}`
-        );
-
-      }
-
-    });
-
-
-    /* =========================
-       عرض بطاقة المكان
-    ========================= */
-
-    function showPlace(name, address) {
-
-      placeName.textContent = name || "المكان";
-
-      placeAddress.textContent = address || "";
-
-      locationCard.style.display = "block";
-
-    }
-
-
-    closeCard.onclick = () => {
-
-      locationCard.style.display = "none";
-
-    };
-
-
-    /* =========================
-       تحديد موقع المستخدم
-    ========================= */
-
-    locationBtn.onclick = () => {
-
-      if (!navigator.geolocation) {
-
-        showStatus("المتصفح لا يدعم تحديد الموقع");
+        searchResults.innerHTML = `
+          <div style="
+            padding:20px;
+            text-align:center;
+            color:#91a6bf;
+            font-size:13px;
+          ">
+            لم يتم العثور على نتائج.
+          </div>
+        `;
 
         return;
       }
 
-      showStatus("جارٍ تحديد موقعك...", 5000);
+
+      searchResults.innerHTML = "";
+
+
+      results.forEach((place) => {
+
+        const item =
+          document.createElement("div");
+
+        item.className =
+          "result-item";
+
+
+        const icon =
+          document.createElement("div");
+
+        icon.className =
+          "result-icon";
+
+        icon.textContent =
+          getPlaceIcon(place);
+
+
+        const text =
+          document.createElement("div");
+
+        text.className =
+          "result-text";
+
+
+        const name =
+          document.createElement("div");
+
+        name.className =
+          "result-name";
+
+        name.textContent =
+          getPlaceName(place);
+
+
+        const address =
+          document.createElement("div");
+
+        address.className =
+          "result-address";
+
+        address.textContent =
+          place.display_name || "";
+
+
+        text.appendChild(name);
+        text.appendChild(address);
+
+        item.appendChild(icon);
+        item.appendChild(text);
+
+
+        item.addEventListener("click", () => {
+
+          selectSearchResult(place);
+
+        });
+
+
+        searchResults.appendChild(item);
+
+      });
+
+    }
+
+
+    /*
+      أيقونة المكان
+    */
+    function getPlaceIcon(place) {
+
+      const type =
+        place.type || "";
+
+      if (
+        type.includes("restaurant") ||
+        type.includes("cafe") ||
+        type.includes("fast_food")
+      ) {
+        return "🍽️";
+      }
+
+           if (
+        type.includes("hospital") ||
+        type.includes("clinic") ||
+        type.includes("doctors")
+      ) {
+        return "🏥";
+      }
+
+      if (
+        type.includes("school") ||
+        type.includes("university") ||
+        type.includes("college")
+      ) {
+        return "🎓";
+      }
+
+      if (
+        type.includes("hotel") ||
+        type.includes("guest_house")
+      ) {
+        return "🏨";
+      }
+
+      if (
+        type.includes("shop") ||
+        type.includes("supermarket") ||
+        type.includes("mall")
+      ) {
+        return "🛍️";
+      }
+
+      if (
+        type.includes("bank") ||
+        type.includes("atm")
+      ) {
+        return "🏦";
+      }
+
+      if (
+        type.includes("pharmacy")
+      ) {
+        return "💊";
+      }
+
+      if (
+        type.includes("mosque")
+      ) {
+        return "🕌";
+      }
+
+      if (
+        type.includes("place") ||
+        type.includes("city") ||
+        type.includes("town") ||
+        type.includes("village")
+      ) {
+        return "📍";
+      }
+
+      if (
+        type.includes("road") ||
+        type.includes("street")
+      ) {
+        return "🛣️";
+      }
+
+      return "📌";
+    }
+
+
+    /*
+      اسم المكان
+    */
+    function getPlaceName(place) {
+
+      if (
+        place.namedetails &&
+        place.namedetails.name
+      ) {
+        return place.namedetails.name;
+      }
+
+      if (place.name) {
+        return place.name;
+      }
+
+      return (
+        place.display_name ||
+        "موقع"
+      ).split(",")[0];
+
+    }
+
+
+    /*
+      اختيار نتيجة البحث
+    */
+    function selectSearchResult(place) {
+
+      const lat =
+        parseFloat(place.lat);
+
+      const lon =
+        parseFloat(place.lon);
+
+
+      map.setView(
+        [lat, lon],
+        Math.max(map.getZoom(), 16),
+        {
+          animate: false
+        }
+      );
+
+
+      if (searchMarker) {
+        map.removeLayer(searchMarker);
+      }
+
+
+      searchMarker =
+        L.marker([lat, lon])
+          .addTo(map)
+          .bindPopup(`
+            <div dir="rtl" style="
+              min-width:190px;
+              font-family:Arial;
+            ">
+
+              <strong style="
+                display:block;
+                font-size:15px;
+                color:#111;
+                margin-bottom:6px;
+              ">
+                ${escapeHTML(getPlaceName(place))}
+              </strong>
+
+              <div style="
+                color:#555;
+                font-size:12px;
+                line-height:1.6;
+              ">
+                ${escapeHTML(place.display_name || "")}
+              </div>
+
+              <button
+                onclick="openDirectionsFromSearch(${lat}, ${lon})"
+                style="
+                  margin-top:10px;
+                  width:100%;
+                  border:0;
+                  padding:10px;
+                  border-radius:9px;
+                  background:#1264c4;
+                  color:white;
+                  font-weight:bold;
+                  cursor:pointer;
+                "
+              >
+                🧭 الحصول على الاتجاهات
+              </button>
+
+            </div>
+          `)
+          .openPopup();
+
+
+      searchResults.style.display = "none";
+
+
+      destinationInput.value =
+        getPlaceName(place);
+
+      destinationInput.dataset.lat =
+        lat;
+
+      destinationInput.dataset.lon =
+        lon;
+
+    }
+
+
+    /*
+      حماية النصوص
+    */
+    function escapeHTML(value) {
+
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+    }
+
+
+    /*
+      فتح الاتجاهات من نتيجة البحث
+    */
+    window.openDirectionsFromSearch =
+      function(lat, lon) {
+
+        directionsPanel.style.display =
+          "block";
+
+
+        destinationInput.dataset.lat =
+          lat;
+
+        destinationInput.dataset.lon =
+          lon;
+
+
+        if (currentUserLocation) {
+
+          startInput.value =
+            "موقعي الحالي";
+
+          startInput.dataset.lat =
+            currentUserLocation[0];
+
+          startInput.dataset.lon =
+            currentUserLocation[1];
+
+        }
+
+      };
+
+
+    /*
+      زر الاتجاهات
+    */
+    document.getElementById("routeButton")
+      .addEventListener("click", () => {
+
+        if (
+          directionsPanel.style.display ===
+          "block"
+        ) {
+
+          directionsPanel.style.display =
+            "none";
+
+        } else {
+
+          directionsPanel.style.display =
+            "block";
+
+        }
+
+      });
+
+
+    /*
+      إغلاق الاتجاهات
+    */
+    document.getElementById("closeDirection")
+      .addEventListener("click", () => {
+
+        directionsPanel.style.display =
+          "none";
+
+      });
+
+
+    /*
+      زر موقعي
+    */
+    document.getElementById("myLocation")
+      .addEventListener("click", () => {
+
+        locateUser(true);
+
+      });
+
+
+    /*
+      تحديد موقع المستخدم
+    */
+    function locateUser(showMessage = false) {
+
+      if (!navigator.geolocation) {
+
+        showToast(
+          "هذا الجهاز لا يدعم تحديد الموقع."
+        );
+
+        return;
+
+      }
+
+
+      if (showMessage) {
+
+        showToast(
+          "جارٍ تحديد موقعك..."
+        );
+
+      }
+
 
       navigator.geolocation.getCurrentPosition(
 
-        position => {
+        function(position) {
 
-          const lat = position.coords.latitude;
-          const lon = position.coords.longitude;
+          const lat =
+            position.coords.latitude;
 
-          selectedLat = lat;
-          selectedLon = lon;
+          const lon =
+            position.coords.longitude;
 
-          map.setView([lat, lon], 16);
+          const accuracy =
+            position.coords.accuracy;
+
+
+          currentUserLocation =
+            [lat, lon];
+
+
+          /*
+            أيقونة موقع المستخدم
+          */
+          const userIcon =
+            L.divIcon({
+              className: "",
+              html:
+                '<div class="user-marker"></div>',
+              iconSize: [20, 20],
+              iconAnchor: [10, 10]
+            });
+
 
           if (userMarker) {
-            map.removeLayer(userMarker);
-          }
 
-          const userIcon = L.divIcon({
-            className: "",
-            html: '<div class="user-marker"></div>',
-            iconSize: [20,20],
-            iconAnchor: [10,10]
-          });
-
-          userMarker = L.marker(
-            [lat, lon],
-            { icon: userIcon }
-          ).addTo(map);
-
-          showPlace(
-            "موقعك الحالي",
-            `خط العرض: ${lat.toFixed(5)} • خط الطول: ${lon.toFixed(5)}`
-          );
-
-          locationBtn.classList.add("active");
-
-          showStatus("تم تحديد موقعك");
-
-        },
-
-        error => {
-
-          locationBtn.classList.remove("active");
-
-          if (error.code === 1) {
-
-            showStatus(
-              "لم يتم السماح بالوصول إلى موقعك"
+            userMarker.setLatLng(
+              [lat, lon]
             );
 
           } else {
 
-            showStatus(
-              "تعذر تحديد موقعك"
+            userMarker =
+              L.marker(
+                [lat, lon],
+                {
+                  icon: userIcon,
+                  zIndexOffset: 1000
+                }
+              ).addTo(map);
+
+          }
+
+
+          /*
+            دائرة دقة الموقع
+          */
+          if (userCircle) {
+
+            userCircle.setLatLng(
+              [lat, lon]
+            );
+
+            userCircle.setRadius(
+              accuracy
+            );
+
+          } else {
+
+            userCircle =
+              L.circle(
+                [lat, lon],
+                {
+                  radius: accuracy,
+                  color: "#198cff",
+                  fillColor: "#198cff",
+                  fillOpacity: 0.08,
+                  weight: 1
+                }
+              ).addTo(map);
+
+          }
+
+
+          /*
+            الانتقال إلى موقع المستخدم
+          */
+          map.setView(
+            [lat, lon],
+            17,
+            {
+              animate: false
+            }
+          );
+
+
+          /*
+            معلومات الموقع
+          */
+          document.getElementById(
+            "locationCoordinates"
+          ).textContent =
+            `${lat.toFixed(6)}, ${lon.toFixed(6)} • دقة تقريبية ${Math.round(accuracy)} م`;
+
+
+          document.getElementById(
+            "locationCard"
+          ).style.display =
+            "block";
+
+
+          /*
+            تجهيز نقطة البداية
+          */
+          startInput.value =
+            "موقعي الحالي";
+
+          startInput.dataset.lat =
+            lat;
+
+          startInput.dataset.lon =
+            lon;
+
+
+          if (showMessage) {
+
+            showToast(
+              "تم تحديد موقعك بنجاح."
             );
 
           }
+
+        },
+
+        function(error) {
+
+          let message =
+            "تعذر تحديد موقعك.";
+
+          if (error.code === 1) {
+
+            message =
+              "يرجى السماح بالوصول إلى موقعك.";
+
+          } else if (error.code === 2) {
+
+            message =
+              "تعذر الحصول على موقعك.";
+
+          } else if (error.code === 3) {
+
+            message =
+              "انتهت مهلة تحديد الموقع.";
+
+          }
+
+
+          showToast(message);
 
         },
 
         {
           enableHighAccuracy: true,
-          timeout: 10000,
+          timeout: 15000,
           maximumAge: 0
         }
 
       );
 
-    };
+    }
 
 
-    /* =========================
-       الاتجاهات
-    ========================= */
+    /*
+      زر استخدام موقعي
+    */
+    document.getElementById("useMyLocation")
+      .addEventListener("click", () => {
 
-    directionsBtn.onclick = () => {
+        if (currentUserLocation) {
 
-      if (
-        selectedLat === null ||
-        selectedLon === null
-      ) {
+          startInput.value =
+            "موقعي الحالي";
 
-        showStatus("حدد مكانًا أولًا");
+          startInput.dataset.lat =
+            currentUserLocation[0];
 
-        return;
-      }
+          startInput.dataset.lon =
+            currentUserLocation[1];
 
-      if (!userMarker) {
-
-        showStatus(
-          "حدد موقعك أولًا للحصول على الاتجاهات"
-        );
-
-        locationBtn.click();
-
-        return;
-      }
-
-      const userPosition =
-        userMarker.getLatLng();
-
-      const url =
-        "https://www.openstreetm
-ap.org/directions" +
-        "?engine=fossgis_osrm_car" +
-        "&route=" +
-        userPosition.lat + "," +
-        userPosition.lng + ";" +
-        selectedLat + "," +
-        selectedLon;
-
-      window.open(url, "_blank");
-
-    };
-
-
-    /* =========================
-       مشاركة المكان
-    ========================= */
-
-    shareBtn.onclick = async () => {
-
-      if (
-        selectedLat === null ||
-        selectedLon === null
-      ) {
-
-        showStatus("حدد مكانًا أولًا");
-
-        return;
-      }
-
-      const shareUrl =
-        `https://www.openstreetmap.org/?mlat=${selectedLat}&mlon=${selectedLon}#map=17/${selectedLat}/${selectedLon}`;
-
-      try {
-
-        if (navigator.share) {
-
-          await navigator.share({
-            title: "Alislamiah Maps",
-            text: "موقع من Alislamiah Maps",
-            url: shareUrl
-          });
+          showToast(
+            "تم استخدام موقعك كنقطة انطلاق."
+          );
 
         } else {
 
-          await navigator.clipboard.writeText(shareUrl);
-
-          showStatus("تم نسخ رابط المكان");
+          locateUser(true);
 
         }
 
-      } catch (error) {
-
-        // تم إلغاء المشاركة
-      }
-
-    };
+      });
 
 
-    /* =========================
-       زر القائمة
-    ========================= */
+    /*
+      حساب المسار
+    */
+    document.getElementById("calculateRoute")
+      .addEventListener("click", async () => {
 
-    document.getElementById("menuBtn").onclick = () => {
+        let startLat =
+          parseFloat(
+            startInput.dataset.lat
+          );
 
-      showStatus("قائمة Alislamiah Maps");
+        let startLon =
+          parseFloat(
+            startInput.dataset.lon
+          );
 
-    };
+
+        let endLat =
+          parseFloat(
+            destinationInput.dataset.lat
+          );
+
+        let endLon =
+          parseFloat(
+            destinationInput.dataset.lon
+          );
 
 
-    /* =========================
-       التنقل السفلي
-    ========================= */
+        /*
+          إذا لم توجد إحداثيات للبداية
+        */
+        if (
+          !Number.isFinite(startLat) ||
+          !Number.isFinite(startLon)
+        ) {
 
-    const navItems =
-      document.querySelectorAll(".nav-item");
+          if (
+            startInput.value.trim() ===
+            "موقعي الحالي"
+          ) {
 
-    navItems.forEach(item => {
+            if (!currentUserLocation) {
 
-      item.addEventListener("click", () => {
+              locateUser(true);
 
-        navItems.forEach(nav => {
-          nav.classList.remove("active");
-        });
+              showToast(
+                "اسمح بالوصول إلى موقعك ثم اضغط عرض المسار."
+              );
 
-        item.classList.add("active");
+              return;
+
+            }
+
+
+            startLat =
+              currentUserLocation[0];
+
+            startLon =
+              currentUserLocation[1];
+
+          } else {
+
+            const start =
+              await geocodeAddress(
+                startInput.value.trim()
+              );
+
+
+            if (!start) {
+
+              showToast(
+                "لم يتم العثور على نقطة الانطلاق."
+              );
+
+              return;
+
+            }
+
+
+            startLat =
+              start.lat;
+
+            startLon =
+              start.lon;
+
+          }
+
+        }
+
+
+        /*
+          إذا لم توجد إحداثيات للوجهة
+        */
+        if (
+          !Number.isFinite(endLat) ||
+          !Number.isFinite(endLon)
+        ) {
+
+          const destination =
+            await geocodeAddress(
+              destinationInput.value.trim()
+            );
+
+
+          if (!destination) {
+
+            showToast(
+              "لم يتم العثور على الوجهة."
+            );
+
+            return;
+
+          }
+
+
+          endLat =
+            destination.lat;
+
+          endLon =
+            destination.lon;
+
+        }
+
+
+        startInput.dataset.lat =
+          startLat;
+
+        startInput.dataset.lon =
+          startLon;
+
+        destinationInput.dataset.lat =
+          endLat;
+
+        destinationInput.dataset.lon =
+          endLon;
+
+
+        calculateRoute(
+          startLat,
+          startLon,
+          endLat,
+          endLon
+        );
 
       });
 
-    });
+
+    /*
+      تحويل العنوان إلى إحداثيات
+    */
+    async function geocodeAddress(query) {
+
+      if (!query) {
+        return null;
+      }
 
 
-    /* =========================
-       الخريطة
-    ========================= */
+      try {
 
-    document.getElementById("homeNav").onclick = () => {
-
-      map.setView(
-        [36.7538, 3.0588],
-        12
-      );
-
-    };
+        const url =
+          "https://nominatim.openstreetmap.org/search" +
+          "?format=jsonv2" +
+          "&limit=1" +
+          "&accept-language=ar" +
+          "&q=" +
+          encodeURIComponent(query);
 
 
-    /* =========================
-       الاستكشاف
-    ========================= */
-
-    document.getElementById("exploreNav").onclick = () => {
-
-      searchInput.focus();
-
-      showStatus(
-        "اكتب اسم المكان الذي تريد استكشافه"
-      );
-
-    };
+        const response =
+          await fetch(url);
 
 
-    /* =========================
-       المحفوظات
-    ========================= */
-
-    document.getElementById("savedNav").onclick = () => {
-
-      showStatus(
-        "المحفوظات ستكون متاحة قريبًا"
-      );
-
-    };
+        if (!response.ok) {
+          return null;
+        }
 
 
-    /* =========================
-       الإعدادات
-    ========================= */
-
-    document.getElementById("settingsNav").onclick = () => {
-
-      showStatus(
-        "إعدادات Alislamiah Maps"
-      );
-
-    };
+        const data =
+          await response.json();
 
 
-    /* =========================
-       إغلاق نتائج البحث
-    ========================= */
+        if (!data.length) {
+          return null;
+        }
 
-    document.addEventListener("click", event => {
 
-      const searchBox =
-        document.querySelector(".search-box");
+        return {
+          lat:
+            parseFloat(data[0].lat),
 
-      if (
-        !searchBox.contains(event.target) &&
-        !searchResults.contains(event.target)
-      ) {
+          lon:
+            parseFloat(data[0].lon)
+        };
 
-        searchResults.style.display = "none";
+
+      } catch (error) {
+
+        return null;
 
       }
 
-    });
+    }
 
+
+    /*
+      حساب الطريق باستخدام OSRM
+    */
+    async function calculateRoute(
+      startLat,
+      startLon,
+      endLat,
+      endLon
+    ) {
+
+      showToast(
+        "جارٍ حساب الطريق..."
+      );
+
+
+      try {
+
+        const url =
+          `https://router.project-osrm.org/route/v1/driving/` +
+          `${startLon},${startLat};` +
+          `${endLon},${endLat}` +
+          `?overview=full&geometries=geojson&steps=true`;
+
+
+        const response =
+          await fetch(url);
+
+
+        if (!response.ok) {
+          throw new Error(
+            "Routing error"
+          );
+        }
+
+
+        const data =
+          await response.json();
+
+
+        if (
+          data.code !== "Ok" ||
+          !data.routes ||
+          !data.routes.length
+        ) {
+
+          throw new Error(
+            "No route"
+          );
+
+        }
+
+
+        const route =
+          data.routes[0];
+
+
+        /*
+          حذف المسار السابق
+        */
+        if (routeLayer) {
+
+          map.removeLayer(
+            routeLayer
+          );
+
+        }
+
+
+        /*
+          رسم المسار
+        */
+        routeLayer =
+          L.geoJSON(
+            route.geometry,
+            {
+              style: {
+                color: "#177cff",
+                weight: 6,
+                opacity: 0.95
+              }
+            }
+          ).addTo(map);
+
+
+        /*
+          عرض المسار بالكامل
+        */
+        map.fitBounds(
+          routeLayer.getBounds(),
+          {
+            paddingTopLeft:
+              [25, 120],
+
+            paddingBottomRight:
+              [25, 170],
+
+            animate: false
+          }
+        );
+
+
+        /*
+          المسافة
+        */
+        const distanceKm =
+          route.distance / 1000;
+
+
+        /*
+          الوقت
+        */
+        const durationMin =
+          Math.round(
+            route.duration / 60
+          );
+
+
+        document.getElementById(
+          "routeDistance"
+        ).textContent =
+          distanceKm < 1
+            ? Math.round(
+                route.distance
+              ) + " م"
+            : distanceKm.toFixed(1) +
+              " كم";
+
+
+        document.getElementById(
+          "routeDuration"
+        ).textContent =
+          formatDuration(
+            durationMin
+          );
+
+
+        document.getElementById(
+          "routeInfo"
+        ).style.display =
+          "block";
+
+
+        showToast(
+          "تم حساب الطريق."
+        );
+
+
+      } catch (error) {
+
+        showToast(
+          "تعذر حساب الطريق حالياً."
+        );
+
+      }
+
+    }
+
+
+    /*
+      تنسيق مدة الطريق
+    */
+    function formatDuration(minutes) {
+
+      if (minutes < 60) {
+
+        return (
+          minutes +
+          " دقيقة"
+        );
+
+      }
+
+
+      const hours =
+        Math.floor(
+          minutes / 60
+        );
+
+
+      const mins =
+        minutes % 60;
+
+
+      if (!mins) {
+
+        return (
+          hours +
+          " ساعة"
+        );
+
+      }
+
+
+      return (
+        hours +
+        " س " +
+        mins +
+        " د"
+      );
+
+    }
+
+
+    /*
+      إخفاء نتائج البحث عند الضغط
+      على الخريطة
+    */
+    map.on("click", () => {
+
+      searchResults.style.display =
+        "none";
+
+    });
 
   </script>
 
