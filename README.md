@@ -1997,6 +1997,47 @@
 
     });
 
+// دالة تحديد موقع المستخدم
+function getUserLocation(mapInstance) {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const userLatLng = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                
+                mapInstance.setCenter(userLatLng);
+                mapInstance.setZoom(17);
+
+                L.marker([userLatLng.lat, userLatLng.lng]).addTo(mapInstance)
+                    .bindPopup('<b>موقعك الحالي</b>')
+                    .openPopup();
+
+                localStorage.setItem('islamiah_lat', userLatLng.lat);
+                localStorage.setItem('islamiah_lng', userLatLng.lng);
+            },
+            (error) => {
+                console.error("تعذر تحديد الموقع: ", error.message);
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0
+            }
+        );
+    }
+}
+
+// تشغيل الدالة فور تحميل الصفحة إذا لم يكن هناك موقع محفوظ مسبقاً
+window.addEventListener('DOMContentLoaded', () => {
+    const savedLat = localStorage.getItem('islamiah_lat');
+    if (!savedLat && typeof map !== 'undefined') {
+        getUserLocation(map);
+    }
+});
+
+
   </script>
 
 </body>
